@@ -1,0 +1,78 @@
+CREACION ENTORNO VIRTUAL-----------------------------------------------------------------------------------------------
+
+-. python -m venv env (crea un entorno virtual de trabajo)
+-. .\env\Scripts\activate (activa el entorno virtual)
+-. pip install -r requirements.txt (instalación de dependencias)
+-. USER_MAIL=tu_correo@ejemplo.com PASSWORD=tu_contraseña (crea un archivo .env en el directorio raíz del proyecto)
+-. python run.py (ejecutar script)
+
+-----------------------------------------------------------------------------------------------------------------------
+
+
+CREACION DE ESTRUCTURA DE CARPETAS Y ARCHIVOS--------------------------------------------------------------------------
+
+mkdir email_automation_system
+cd email_automation_system
+
+# Crear carpetas principales
+mkdir config
+mkdir src
+mkdir data
+mkdir logs
+mkdir templates
+mkdir utils
+mkdir tests
+mkdir assets
+
+# Crear subcarpetas en data/
+mkdir data\input
+mkdir data\input\reports
+mkdir data\input\attachments
+mkdir data\sent
+mkdir data\sent\archive
+mkdir data\failed
+mkdir data\failed\retry
+
+# Crear subcarpetas en logs/
+mkdir logs\archive
+
+# Crear archivos JSON de configuración
+"" | Out-File -FilePath "config\settings.json" -Encoding utf8
+"" | Out-File -FilePath "config\email_config.json" -Encoding utf8
+"" | Out-File -FilePath "config\schedule_config.json" -Encoding utf8
+
+# Crear archivos en src/
+"" | Out-File -FilePath "src\main.py" -Encoding utf8
+"" | Out-File -FilePath "src\gui_interface.py" -Encoding utf8
+"" | Out-File -FilePath "src\email_sender.py" -Encoding utf8
+"" | Out-File -FilePath "src\file_monitor.py" -Encoding utf8
+"" | Out-File -FilePath "src\scheduler.py" -Encoding utf8
+"" | Out-File -FilePath "src\config_loader.py" -Encoding utf8
+
+# Crear archivos en templates/
+"" | Out-File -FilePath "templates\email_success.html" -Encoding utf8
+"" | Out-File -FilePath "templates\email_error.html" -Encoding utf8
+"" | Out-File -FilePath "templates\notification.txt" -Encoding utf8
+
+# Crear archivos en utils/
+"" | Out-File -FilePath "utils\__init__.py" -Encoding utf8
+"" | Out-File -FilePath "utils\logger.py" -Encoding utf8
+"" | Out-File -FilePath "utils\validators.py" -Encoding utf8
+"" | Out-File -FilePath "utils\helpers.py" -Encoding utf8
+
+# Crear archivos en tests/
+"" | Out-File -FilePath "tests\test_email_sender.py" -Encoding utf8
+"" | Out-File -FilePath "tests\test_file_monitor.py" -Encoding utf8
+"" | Out-File -FilePath "tests\test_config.py" -Encoding utf8
+
+# Crear archivos en logs/
+"" | Out-File -FilePath "logs\app.log" -Encoding utf8
+"" | Out-File -FilePath "logs\email.log" -Encoding utf8
+"" | Out-File -FilePath "logs\errors.log" -Encoding utf8
+
+# Crear archivos en la raíz
+"" | Out-File -FilePath "requirements.txt" -Encoding utf8
+"" | Out-File -FilePath "README.md" -Encoding utf8
+"" | Out-File -FilePath ".env.example" -Encoding utf8
+"" | Out-File -FilePath ".gitignore" -Encoding utf8
+"" | Out-File -FilePath "run.py" -Encoding utf8

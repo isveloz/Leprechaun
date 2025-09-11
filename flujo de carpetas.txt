@@ -1,0 +1,58 @@
+email_automation_system/
+│
+├── config/
+│   ├── settings.json          # Configuración general
+│   ├── email_config.json      # Configuración de email
+│   └── schedule_config.json   # Configuración de horarios
+│
+├── src/
+│   ├── main.py               # Punto de entrada principal
+│   ├── gui_interface.py      # Interfaz gráfica con tkinter
+│   ├── email_sender.py       # Lógica de envío de emails
+│   ├── file_monitor.py       # Monitor de archivos
+│   ├── scheduler.py          # Programador de tareas
+│   └── config_loader.py      # Cargador de configuraciones
+│
+├── data/
+│   ├── input/             # Carpeta de archivos para enviar
+│   │   ├── reports/          # Subcarpeta para reportes
+│   │   └── attachments/      # Subcarpeta para adjuntos varios
+│   │
+│   ├── sent/              # Archivos ya enviados (respaldo)
+│   │   └── archive/          # Archivo histórico
+│   │
+│   └── failed/            # Archivos que fallaron al enviar
+│       └── retry/            # Para reintentos
+│
+├── logs/
+│   ├── app.log              # Log general de la aplicación
+│   ├── email.log            # Log específico de emails
+│   ├── errors.log           # Log de errores
+│   └── archive/             # Logs archivados por fecha
+│
+├── templates/
+│   ├── email_success.html   # Template para email exitoso
+│   ├── email_error.html     # Template para email de error
+│   └── notification.txt     # Template de notificación simple
+│
+├── utils/
+│   ├── __init__.py
+│   ├── logger.py            # Configuración de logging
+│   ├── validators.py        # Validadores de archivos/email
+│   └── helpers.py           # Funciones auxiliares
+│
+├── tests/
+│   ├── test_email_sender.py # Tests del enviador de email
+│   ├── test_file_monitor.py # Tests del monitor de archivos
+│   └── test_config.py       # Tests de configuración
+│
+├── assets/
+│   ├── icon.ico             # Icono de la aplicación
+│   ├── success.png          # Imagen para mensaje exitoso
+│   └── error.png            # Imagen para mensaje de error
+│
+├── requirements.txt         # Dependencias Python
+├── README.md               # Documentación del proyecto
+├── .env.example            # Ejemplo de variables de entorno
+├── .gitignore             # Archivos ignorados por git
+└── run.py                 # Script de ejecución simple
