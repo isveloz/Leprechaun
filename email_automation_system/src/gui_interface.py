@@ -1,142 +1,141 @@
-﻿
-import customtkinter as ctk
-import threading
+﻿import customtkinter as ctk
 import time
-import os
+import threading
 
-# Colores corporativos Falabella
-FALABELLA_GREEN = "#78be20"
-FALABELLA_YELLOW = "#ffcc00"
-FALABELLA_WHITE = "#ffffff"
-FALABELLA_DARK = "#222222"
+# ===== Paleta gris simplificada =====
+GRAY = {
+    "bg":        "#0F0F10",
+    "panel":     "#16181C",
+    "card":      "#1F2328",
+    "border":    "#2A2F36",
+    "muted":     "#9BA3AF",
+    "text":      "#D0D4DB",
+    "text_hi":   "#F2F4F8",
+    "btn":       "#2B3138",
+    "btn_hover": "#343A43",
+    "entry":     "#1B1F24",
+    "success":   "#1E2A1E",
+    "error":     "#2A1E1E",
+}
+
+ctk.set_appearance_mode("Dark")
+ctk.set_default_color_theme("blue")
+
+BASE_FONT = ("Segoe UI Variable", 12)
+TITLE_FONT = ("Segoe UI Variable", 16, "bold")
+LABEL_FONT = ("Segoe UI Variable", 12)
+BUTTON_FONT = ("Segoe UI Variable", 13, "bold")
+SP = 8
+
+def center(win, w=480, h=320):
+    win.update_idletasks()
+    sw, sh = win.winfo_screenwidth(), win.winfo_screenheight()
+    x, y = int((sw - w)/2), int((sh - h)/2.5)
+    win.geometry(f"{w}x{h}+{x}+{y}")
+
+class ModalSimple(ctk.CTkToplevel):
+    """Modal sencillo con OK y Ver más, tamaño compacto."""
+    def __init__(self, master, resumen, detalle):
+        super().__init__(master)
+        self.title("Resultado del envío")
+        self.configure(fg_color=GRAY["card"])
+        center(self, 440, 220)
+        self.transient(master)
+        self.grab_set()
+
+        self.grid_columnconfigure(0, weight=1)
+        ctk.CTkLabel(self, text="Resultado", font=TITLE_FONT, text_color=GRAY["text_hi"])\
+            .grid(row=0, column=0, sticky="w", padx=SP*2, pady=(SP*2, SP))
+
+        ctk.CTkLabel(self, text=resumen, font=BASE_FONT, text_color=GRAY["text"])\
+            .grid(row=1, column=0, sticky="we", padx=SP*2, pady=(0, SP*2))
+
+        btns = ctk.CTkFrame(self, fg_color=GRAY["card"])
+        btns.grid(row=2, column=0, sticky="e", padx=SP*2, pady=(0, SP*2))
+
+        style = dict(font=BUTTON_FONT, fg_color=GRAY["btn"], hover_color=GRAY["btn_hover"],
+                     text_color=GRAY["text"], corner_radius=10, height=SP*4)
+        ctk.CTkButton(btns, text="Ver más acerca del envío", command=self.ver_mas(detalle), **style)\
+            .pack(side="left", padx=(0, SP))
+        ctk.CTkButton(btns, text="OK", command=self.destroy, **style)\
+            .pack(side="left", padx=(SP, 0))
+
+    def ver_mas(self, detalle):
+        def inner():
+            d = ctk.CTkToplevel(self)
+            d.title("Detalle de envío")
+            d.configure(fg_color=GRAY["card"])
+            center(d, 500, 300)
+            d.transient(self)
+            d.grab_set()
+            d.grid_columnconfigure(0, weight=1)
+            ctk.CTkLabel(d, text="Detalle", font=TITLE_FONT, text_color=GRAY["text_hi"])\
+                .grid(row=0, column=0, sticky="w", padx=SP*2, pady=(SP*2, SP))
+            tb = ctk.CTkTextbox(d, fg_color=GRAY["entry"], text_color=GRAY["text_hi"],
+                                font=("Consolas", 11), height=8)
+            tb.grid(row=1, column=0, sticky="nsew", padx=SP*2, pady=(0, SP*2))
+            tb.insert("1.0", detalle)
+            tb.configure(state="disabled")
+            btn_style = dict(font=BUTTON_FONT, fg_color=GRAY["btn"], hover_color=GRAY["btn_hover"],
+                             text_color=GRAY["text"], corner_radius=10, height=SP*4)
+            ctk.CTkButton(d, text="Cerrar", command=d.destroy, **btn_style)\
+                .grid(row=2, column=0, sticky="e", padx=SP*2, pady=(0, SP*2))
+        return inner
 
 
-class EmailAutomationGUI:
-	def __init__(self, root):
-		self.root = root
-		self.root.title(" Sistema automatico de Correos - Marketing Digital")
-		self.root.geometry("540x600")
-		ctk.set_appearance_mode("dark")
-		self.root.configure(fg_color=FALABELLA_DARK)
+class ConfirmacionVisual(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title("")
+        self.configure(fg_color=GRAY["bg"])
+        center(self, 480, 320)
 
-		# Variables de control
-		self.files_list = []
-		self.countdown_active = False
-		self.folder_path = r"C:\Users\idveloz\Desktop\carpeta base"
+        # Valores de estado
+        self.val_estado = None
+        self.val_archivo = None
+        self.val_destinat = None
+        self.val_duracion = None
 
-		# Crear widgets
-		self.create_widgets()
-		self.scan_files()
+        # UI simple
+        header = ctk.CTkFrame(self, fg_color=GRAY["panel"], corner_radius=10)
+        header.pack(fill="x", padx=SP*2, pady=(SP*2, SP))
+        ctk.CTkLabel(header, text="Confirmación de envio", font=TITLE_FONT, text_color=GRAY["text_hi"])\
+            .pack(side="left", padx=(SP*2, 0), pady=SP*1.5)
 
-	def create_widgets(self):
-		# Header con logo y título
-		self.header_frame = ctk.CTkFrame(self.root, fg_color=FALABELLA_GREEN, corner_radius=16, height=70)
-		self.header_frame.pack(fill="x", padx=18, pady=(18, 10))
-		self.header_frame.pack_propagate(False)
+        card = ctk.CTkFrame(self, fg_color=GRAY["card"], corner_radius=12, border_color=GRAY["border"], border_width=1)
+        card.pack(fill="both", expand=True, padx=SP*2, pady=SP)
 
-		self.title_label = ctk.CTkLabel(self.header_frame, text="Automatización de Envío de Correos", text_color=FALABELLA_DARK, font=("Segoe UI", 22, "bold"), fg_color="transparent")
-		self.title_label.pack(side="left", padx=(18, 0), pady=10)
+        # Etiquetas/read-only
+        def make_row(parent, text_label):
+            row = ctk.CTkFrame(parent, fg_color=GRAY["card"])
+            row.pack(fill="x", padx=SP*2, pady=(0, SP))
+            lbl = ctk.CTkLabel(row, text=text_label, font=LABEL_FONT, text_color=GRAY["muted"])
+            val = ctk.CTkLabel(row, text="—", font=LABEL_FONT, text_color=GRAY["text_hi"])
+            lbl.pack(side="left")
+            val.pack(side="right")
+            return val
 
-		# Frame para la hora programada
-		self.time_frame = ctk.CTkFrame(self.root, fg_color=FALABELLA_WHITE, corner_radius=14)
-		self.time_frame.pack(fill="x", padx=18, pady=(0, 10))
+        self.val_estado   = make_row(card, "Estado:")
+        self.val_archivo  = make_row(card, "Archivo:")
+        self.val_destinat = make_row(card, "Destinatarios:")
+        self.val_duracion = make_row(card, "Duración:")
 
-		self.time_label = ctk.CTkLabel(self.time_frame, text="Hora actual: --:--", text_color=FALABELLA_DARK, font=("Segoe UI", 14, "bold"), fg_color="transparent")
-		self.time_label.pack(pady=(10, 0))
+    def notify(self, ok: bool, archivo: str, destinatarios: list[str], duration_s: float, log: str):
+        estado_txt = "Éxito" if ok else "Error"
+        self.val_estado.configure(text=estado_txt, text_color=GRAY["text_hi"])
+        self.val_archivo.configure(text=archivo or "—")
+        self.val_destinat.configure(text=", ".join(destinatarios))
+        self.val_duracion.configure(text=f"{duration_s:.2f}s")
 
-		self.confirm_button = ctk.CTkButton(self.time_frame, text="Confirmar Hora", fg_color=FALABELLA_YELLOW, hover_color="#ffe066", text_color=FALABELLA_DARK, corner_radius=10, font=("Segoe UI", 13, "bold"), command=self.confirm_time)
-		self.confirm_button.pack(pady=10)
+        resumen = "Envío completado." if ok else "Se produjo un error."
+        detalle = f"Archivo: {archivo}\nDestinatarios: {', '.join(destinatarios)}\nDuración: {duration_s:.2f}s\n\nLog:\n{log}"
+        ModalSimple(self, resumen, detalle)
 
-		# Frame para la lista de archivos
-		self.files_frame = ctk.CTkFrame(self.root, fg_color=FALABELLA_DARK, corner_radius=14, border_color=FALABELLA_GREEN, border_width=2)
-		self.files_frame.pack(fill="both", padx=18, pady=10, expand=True)
-
-		self.files_label = ctk.CTkLabel(self.files_frame, text="Archivos Encontrados", text_color=FALABELLA_GREEN, font=("Segoe UI", 15, "bold"), fg_color="transparent")
-		self.files_label.pack(pady=(10, 0))
-
-		self.files_text = ctk.CTkTextbox(self.files_frame, height=140, fg_color=FALABELLA_WHITE, text_color=FALABELLA_DARK, font=("Consolas", 12), corner_radius=8, border_color=FALABELLA_YELLOW, border_width=1)
-		self.files_text.pack(fill="both", expand=True, padx=10, pady=10)
-		self.files_text.configure(state="disabled")
-
-		# Frame para el countdown
-		self.countdown_frame = ctk.CTkFrame(self.root, fg_color=FALABELLA_GREEN, corner_radius=14)
-		self.countdown_frame.pack(fill="x", padx=18, pady=10)
-
-		self.countdown_label = ctk.CTkLabel(self.countdown_frame, text="Listo para enviar...", text_color=FALABELLA_DARK, font=("Segoe UI", 14, "bold"), fg_color="transparent")
-		self.countdown_label.pack(pady=10)
-
-		# Frame para los botones de acción
-		self.action_frame = ctk.CTkFrame(self.root, fg_color="transparent")
-		self.action_frame.pack(fill="x", padx=18, pady=(10, 18))
-
-		self.send_button = ctk.CTkButton(self.action_frame, text="Enviar Correos", fg_color=FALABELLA_GREEN, hover_color=FALABELLA_YELLOW, text_color=FALABELLA_DARK, border_color=FALABELLA_YELLOW, border_width=2, corner_radius=18, font=("Segoe UI", 15, "bold"), height=38, command=self.start_countdown)
-		self.send_button.pack(side="left", padx=7, pady=10, ipadx=8)
-
-		self.cancel_button = ctk.CTkButton(self.action_frame, text="Cancelar", fg_color=FALABELLA_DARK, hover_color="#444444", text_color=FALABELLA_WHITE, border_color=FALABELLA_GREEN, border_width=2, corner_radius=18, font=("Segoe UI", 15), height=38, command=self.cancel_process)
-		self.cancel_button.pack(side="left", padx=7, pady=10, ipadx=8)
-
-		self.close_button = ctk.CTkButton(self.action_frame, text="Cerrar", fg_color=FALABELLA_YELLOW, hover_color="#ffe066", text_color=FALABELLA_DARK, border_color=FALABELLA_GREEN, border_width=2, corner_radius=18, font=("Segoe UI", 15), height=38, command=self.root.quit)
-		self.close_button.pack(side="right", padx=7, pady=10, ipadx=8)
-
-	def confirm_time(self):
-		self.scan_files()
-		self.show_popup("Hora confirmada. Archivos encontrados.")
-
-	def scan_files(self):
-		"""Escanea la carpeta base y actualiza la lista de archivos."""
-		if os.path.exists(self.folder_path) and os.path.isdir(self.folder_path):
-			self.files_list = [f for f in os.listdir(self.folder_path) if os.path.isfile(os.path.join(self.folder_path, f))]
-		else:
-			self.files_list = []
-		self.update_files_list()
-
-	def update_files_list(self):
-		self.files_text.configure(state="normal")
-		self.files_text.delete("1.0", "end")
-		for file in self.files_list:
-			self.files_text.insert("end", f"- {file}\n")
-		self.files_text.configure(state="disabled")
-
-	def start_countdown(self):
-		if not self.files_list:
-			self.show_popup("No hay archivos para enviar.", error=True)
-			return
-		self.countdown_active = True
-		self.countdown_label.configure(text="Enviando en 10 segundos...")
-		threading.Thread(target=self.run_countdown, daemon=True).start()
-
-	def run_countdown(self):
-		for i in range(10, 0, -1):
-			if not self.countdown_active:
-				return
-			self.countdown_label.configure(text=f"Enviando en {i} segundos...")
-			time.sleep(1)
-		self.send_emails()
-
-	def send_emails(self):
-		self.countdown_label.configure(text="Enviando correos...")
-		self.show_popup("Correos enviados correctamente.", success=True)
-
-	def cancel_process(self):
-		self.countdown_active = False
-		self.countdown_label.configure(text="Proceso cancelado.")
-
-	def show_popup(self, message, success=False, error=False):
-		popup = ctk.CTkToplevel(self.root)
-		popup.geometry("360x150")
-		popup.title("Mensaje")
-		color = FALABELLA_GREEN if success else (FALABELLA_YELLOW if error else FALABELLA_DARK)
-		popup.configure(fg_color=color)
-		label = ctk.CTkLabel(popup, text=message, text_color=FALABELLA_DARK if color != FALABELLA_DARK else FALABELLA_WHITE, font=("Segoe UI", 16, "bold"), fg_color="transparent")
-		label.pack(pady=(32, 12), padx=24, fill="x")
-		btn_ok = ctk.CTkButton(popup, text="Aceptar", fg_color=FALABELLA_WHITE, hover_color=FALABELLA_GREEN, text_color=FALABELLA_DARK, corner_radius=14, font=("Segoe UI", 13, "bold"), command=popup.destroy)
-		btn_ok.pack(pady=10)
-		popup.transient(self.root)
-		popup.grab_set()
-		self.root.wait_window(popup)
-
-# Ejecutar la interfaz
 if __name__ == "__main__":
-	root = ctk.CTk()
-	app = EmailAutomationGUI(root)
-	root.mainloop()
+    app = ConfirmacionVisual()
+    # Simulación para probar
+    def sim():
+        time.sleep(1)
+        app.notify(True, "ejemplo.txt", ["a@ejemplo.com", "b@ejemplo.com"], 2.45, "SMTP OK\nHecho")
+    threading.Thread(target=sim, daemon=True).start()
+    app.mainloop()
