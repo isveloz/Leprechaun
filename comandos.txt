@@ -5,7 +5,7 @@ CREACION ENTORNO VIRTUAL--------------------------------------------------------
 -. pip install -r requirements.txt (instalación de dependencias)
 -. USER_MAIL=tu_correo@ejemplo.com PASSWORD=tu_contraseña (crea un archivo .env en el directorio raíz del proyecto)
 -. python run.py (ejecutar script)
-
+-. pip install python-dotenv (para cargar las variables de entorno desde el archivo .env)
 -----------------------------------------------------------------------------------------------------------------------
 
 

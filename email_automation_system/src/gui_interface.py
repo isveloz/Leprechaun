@@ -2,7 +2,7 @@
 import time
 import threading
 
-# ===== Paleta gris simplificada =====
+# Paleta gris simplificada           
 GRAY = {
     "bg":        "#0F0F10",
     "panel":     "#16181C",
