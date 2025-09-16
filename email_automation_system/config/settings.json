@@ -1,1 +1,35 @@
-﻿
+﻿{
+  "folder_path": "default_folder",
+  "app_name": "Leprechaun Email Automation System",
+  "version": "1.0.0",
+  "logging": {
+    "level": "INFO",
+    "file": "logs/app.log",
+    "max_size_mb": 5,
+    "backup_count": 3
+  },
+  "ui": {
+    "theme": "dark",
+    "language": "es",
+    "default_window_size": {
+      "width": 800,
+      "height": 600
+    }
+  },
+  "email": {
+    "retry_attempts": 3,
+    "timeout_seconds": 30,
+    "default_priority": "high"
+  },
+  "security": {
+    "enable_tls": true,
+    "allowed_domains": ["dominio.com", "falabella.cl"],
+    "max_attachment_size_mb": 25
+  },
+  "notifications": {
+    "enable": true,
+    "success_message": "El correo se envió correctamente.",
+    "error_message": "Hubo un problema al enviar el correo."
+  }
+}
+

@@ -1,1 +1,25 @@
-﻿
+﻿{
+  "schedule": [
+    {
+      "name": "Envio Diario",
+      "enabled": true,
+      "time": "08:00",
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "description": "Envía correos cada día hábil a las 08:00 AM."
+    },
+    {
+      "name": "Envio Semanal",
+      "enabled": true,
+      "time": "10:00",
+      "days": ["Monday"],
+      "description": "Envía correos todos los lunes a las 10:00 AM."
+    },
+    {
+      "name": "Envio Mensual",
+      "enabled": false,
+      "time": "09:00",
+      "days": ["1"],
+      "description": "Envía correos el primer día de cada mes a las 09:00 AM."
+    }
+  ]
+}

@@ -34,7 +34,7 @@ def center(win, w=480, h=320):
     win.geometry(f"{w}x{h}+{x}+{y}")
 
 class ModalSimple(ctk.CTkToplevel):
-    """Modal sencillo con OK y Ver más, tamaño compacto."""
+    """Modal sencillo con OK y Ver m&aacute;s, tama&ntilde;o compacto."""
     def __init__(self, master, resumen, detalle):
         super().__init__(master)
         self.title("Resultado del envío")
@@ -83,7 +83,7 @@ class ModalSimple(ctk.CTkToplevel):
         return inner
 
 
-class ConfirmacionVisual(ctk.CTk):
+class GUIInterface(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("")
@@ -132,7 +132,7 @@ class ConfirmacionVisual(ctk.CTk):
         ModalSimple(self, resumen, detalle)
 
 if __name__ == "__main__":
-    app = ConfirmacionVisual()
+    app = GUIInterface()
     # Simulación para probar
     def sim():
         time.sleep(1)

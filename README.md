@@ -1,7 +1,7 @@
 # Leprechaun Email Automation System
 
 ## Descripción
-Leprechaun es un sistema diseñado para automatizar el envío de correos electrónicos de manera eficiente y segura. Este proyecto es ideal para empresas que necesitan enviar correos masivos o individuales con adjuntos, plantillas personalizadas y credenciales protegidas.
+Leprechaun es un sistema dise&ntilde;ado para automatizar el env&iacute;o de correos electr&oacute;nicos de manera eficiente y segura. Este proyecto es ideal para empresas que necesitan enviar correos masivos o individuales con adjuntos, plantillas personalizadas y credenciales protegidas.
 
 ## Características
 - **Gestión segura de credenciales**: Las credenciales se almacenan en un archivo `.env` y se cargan mediante `python-dotenv`, evitando su exposición en el código fuente.
@@ -46,7 +46,7 @@ email_automation_system/
    SMTP_SERVER=smtp.tuservidor.com
    SMTP_PORT=587
    USERNAME=tu_usuario@tudominio.com
-   PASSWORD=tu_contraseña_segura
+   PASSWORD=tu_contra&ntilde;a_segura
    FROM_EMAIL=tu_usuario@tudominio.com
    ```
 
@@ -61,9 +61,21 @@ email_automation_system/
 4. Inicia el envío masivo y monitorea el progreso desde la GUI.
 
 ### Envío Individual
-1. Abre la pestaña de envío individual en la GUI.
+1. Abre la pesta&ntilde;a de env&iacute;o individual en la GUI.
 2. Ingresa el correo y nombre del destinatario.
 3. Adjunta el archivo si es necesario y presiona "Enviar".
+
+## Actualización
+- **Soporte para múltiples destinatarios**: Ahora puedes enviar correos a varios destinatarios simultáneamente, incluyendo imágenes adjuntas.
+
+## Ejemplo de Uso
+### Envío a Múltiples Destinatarios
+1. Configura los destinatarios en el archivo `email_sender.py`.
+2. Ejecuta el sistema:
+   ```bash
+   python email_automation_system/src/main.py
+   ```
+3. Verifica los logs para confirmar el envío exitoso.
 
 ## Contribución
 1. Haz un fork del repositorio.

@@ -1,14 +1,10 @@
 ﻿{
   "smtp_server": "${SMTP_SERVER}",
-  "smtp_port": "${SMTP_PORT}",
-  "use_tls": true,
-  "username": "${USERNAME}",
+  "port": "${SMTP_PORT}",
+  "email": "${EMAIL}",
   "password": "${PASSWORD}",
   "from_email": "${FROM_EMAIL}",
-  "to_emails": [
-    "destinatario1@dominio.com",
-    "destinatario2@dominio.com"
-  ],
+  "to_emails": ["automatizacionesmarkting.f@gmail.com"],
   "templates": {
     "success": "templates/email_success.html",
     "error": "templates/email_error.html",
@@ -19,9 +15,5 @@
     "priority": "high",
     "retry_attempts": 3,
     "timeout_seconds": 30
-  },
-  "validation": {
-    "required_fields": ["smtp_server", "username", "password", "from_email", "to_emails"],
-    "email_format": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
   }
 }

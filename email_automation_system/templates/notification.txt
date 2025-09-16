@@ -1,1 +1,4 @@
-﻿
+﻿Notificación del sistema:
+
+Tu correo ha sido procesado. Por favor, revisa los detalles en tu bandeja de entrada o en el registro del sistema.
+
