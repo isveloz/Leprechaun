@@ -1,67 +1,87 @@
-# Autoamatización — Sistema de Envío Automatizado con Interfaz de Confirmación Visual
+# Leprechaun Email Automation System
 
-Este proyecto implementa un sistema de apoyo visual para la automatización del envío de correos electrónicos.  
-La interfaz gráfica proporciona confirmación del estado de cada etapa del flujo de trabajo, asegurando trazabilidad y control durante el proceso de envío.
+## Descripción
+Leprechaun es un sistema diseñado para automatizar el envío de correos electrónicos de manera eficiente y segura. Este proyecto es ideal para empresas que necesitan enviar correos masivos o individuales con adjuntos, plantillas personalizadas y credenciales protegidas.
 
----
+## Características
+- **Gestión segura de credenciales**: Las credenciales se almacenan en un archivo `.env` y se cargan mediante `python-dotenv`, evitando su exposición en el código fuente.
+- **Configuración flexible**: El archivo `email_config.json` permite definir múltiples plantillas, destinatarios, y configuraciones avanzadas como prioridad y reintentos.
+- **Interfaz gráfica moderna**: Utiliza `customtkinter` para ofrecer una experiencia de usuario intuitiva y atractiva.
+- **Soporte para adjuntos e imágenes embebidas**: Permite enviar correos con archivos adjuntos e imágenes integradas en el cuerpo del mensaje.
+- **Logs detallados**: Registra cada acción realizada, incluyendo errores y éxitos, para facilitar el monitoreo y la depuración.
 
-## Descripción General
+## Estructura del Proyecto
+```
+email_automation_system/
+├── config/
+│   ├── email_config.json      # Configuración de email
+│   └── settings.json          # Configuración general
+├── src/
+│   ├── email_sender.py        # Lógica de envío de correos
+│   ├── gui_interface.py       # Interfaz gráfica
+│   └── main.py                # Punto de entrada principal
+├── logs/                      # Carpeta para logs
+│   ├── app.log                # Log general
+│   ├── email.log              # Log de correos
+│   └── errors.log             # Log de errores
+├── templates/                 # Plantillas de correos
+│   ├── email_success.html     # Plantilla para correos exitosos
+│   ├── email_error.html       # Plantilla para correos con errores
+│   └── notification.txt       # Plantilla de notificación
+├── .env                       # Archivo de credenciales (no se sube al repositorio)
+├── README.md                  # Documentación del proyecto
+```
 
-El sistema está diseñado para operar en base a una hora programada y a un directorio de archivos definidos.  
-La interfaz no realiza el envío por sí misma, sino que actúa como complemento visual al proceso de automatización, mostrando mensajes de confirmación, listas de archivos disponibles, cuenta regresiva y resultados de envío.
+## Instalación
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/isveloz/Leprechaun.git
+   ```
+2. Instala las dependencias:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+   ```plaintext
+   SMTP_SERVER=smtp.tuservidor.com
+   SMTP_PORT=587
+   USERNAME=tu_usuario@tudominio.com
+   PASSWORD=tu_contraseña_segura
+   FROM_EMAIL=tu_usuario@tudominio.com
+   ```
 
----
+## Uso
+### Envío Masivo
+1. Configura el archivo `email_config.json` con los destinatarios y plantillas.
+2. Ejecuta el sistema:
+   ```bash
+   python email_automation_system/src/main.py
+   ```
+3. Selecciona el archivo CSV con los destinatarios desde la interfaz gráfica.
+4. Inicia el envío masivo y monitorea el progreso desde la GUI.
 
-## Flujo de Operación
+### Envío Individual
+1. Abre la pestaña de envío individual en la GUI.
+2. Ingresa el correo y nombre del destinatario.
+3. Adjunta el archivo si es necesario y presiona "Enviar".
 
-El flujo completo, representado en el diagrama de procesos, se resume en los siguientes pasos:
+## Contribución
+1. Haz un fork del repositorio.
+2. Crea una rama para tus cambios:
+   ```bash
+   git checkout -b feature/nueva-funcionalidad
+   ```
+3. Realiza un pull request explicando tus cambios.
 
-1. **Inicio del sistema**  
-   - Se activa el monitoreo y se verifica la hora programada.
+## Preguntas Frecuentes
+### ¿Cómo protejo mis credenciales?
+Las credenciales se almacenan en el archivo `.env`, que no se sube al repositorio gracias a `.gitignore`. Asegúrate de no compartir este archivo.
 
-2. **Verificación de hora**  
-   - Si no corresponde a la hora configurada: se espera un intervalo (1 minuto) y se reintenta.  
-   - Si corresponde: se muestra la interfaz gráfica de confirmación.
+### ¿Qué pasa si un correo falla?
+Los correos que fallan se registran en `errors.log` y los archivos adjuntos se mueven a la carpeta `failed/retry` para reintentos.
 
-3. **Búsqueda de archivos en carpeta**  
-   - Si no se encuentran archivos: se notifica “Sin archivos” y se retorna al monitoreo.  
-   - Si se encuentran archivos: se muestra la lista dentro de la interfaz.
+### ¿Puedo usar otras plantillas?
+Sí, puedes agregar nuevas plantillas en la carpeta `templates` y configurarlas en `email_config.json`.
 
-4. **Cuenta regresiva y opción de cancelación**  
-   - Se inicia un contador de 10 segundos antes de proceder con el envío.  
-   - El usuario puede cancelar durante este periodo; de hacerlo, el proceso se detiene.
-
-5. **Ejecución del envío**  
-   - Si no se cancela, se ejecuta el script de envío configurado.  
-   - El sistema intenta enviar el correo con los archivos seleccionados.
-
-6. **Resultado del envío**  
-   - Si el envío es exitoso: se notifica “Envío Exitoso” y la interfaz se cierra automáticamente en unos segundos.  
-   - Si ocurre un error: se muestra “Error de Envío” y el usuario debe cerrar manualmente.
-
-7. **Retorno al monitoreo**  
-   - Finalizado el ciclo, el sistema vuelve al estado inicial a la espera de la siguiente hora programada.
-
----
-
-## Funcionalidades de la Interfaz
-
-- Confirmación visual al alcanzarse la hora programada.  
-- Visualización de archivos encontrados en la carpeta configurada.  
-- Mecanismo de cuenta regresiva previo al envío, con posibilidad de cancelación.  
-- Mensajes diferenciados para éxito y error en el envío.  
-- Opciones simples de interacción: aceptar, cerrar, o ver más detalles en un registro.  
-- Auto-cierre en caso de envíos exitosos para evitar intervención manual innecesaria.
-
----
-
-## Requisitos del Sistema
-
-- **Lenguaje:** Python 3.8 o superior  
-- **Dependencias principales:**  
-  - `customtkinter` (para la interfaz gráfica)  
-
-Instalación de dependencias:
-
-```bash
-pip install customtkinter
+## Licencia
+Este proyecto está bajo la licencia MIT. Puedes usarlo y modificarlo libremente.
