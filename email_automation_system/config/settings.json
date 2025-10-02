@@ -23,7 +23,7 @@
   },
   "security": {
     "enable_tls": true,
-    "allowed_domains": ["dominio.com", "falabella.cl"],
+    "allowed_domains": ["dominio.com", "falabella.cl"], 
     "max_attachment_size_mb": 25
   },
   "notifications": {
